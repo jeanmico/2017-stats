@@ -1,0 +1,22 @@
+##Mapping gene_ID to probe IDs
+expression<-read.table("gene_tissue_expression_significance.txt",sep="\t",header=T)
+
+gene_ID<-as.character(expression[,1])
+#convert gene ids to probe ids
+source("https://bioconductor.org/biocLite.R")
+biocLite("hgu133plus2.db")
+
+library(hgu133plus2.db)
+keytypes(db)
+ids=gene_ID
+fromKey="ENTREZID"
+toKey="PROBEID"
+db=hgu133plus2.db
+mappedIDs<-AnnotationDbi::select(db,keys=ids,keytype=fromKey,columns=c(fromKey,toKey))
+head(mappedIDs)
+sum(is.na(mappedIDs))
+probeID<-mappedIDs[,2]
+head(probeID)
+unknownprobes<-mappedIDs[is.na(probeID),]
+unknownprobes<-unknownprobes$ENTREZID
+#this contains the IDs of all the unmapped (and only the unmapped) genes
