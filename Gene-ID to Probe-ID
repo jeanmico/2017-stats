@@ -38,3 +38,7 @@ genelist<-as.character(unique(genelist))
 #select geneIDs present in both the mapped gene list from the expression file and the unique interactome gene list
 finalgenelist<-genelist[match(allgeneIDs,genelist)]
 finalgenelist<-finalgenelist[!is.na(finalgenelist)]
+
+#Create interactome file with only the 10,434 genes
+newinteractome<-subset(interactome,c((gene_ID_1 %in% finalgenelist)&(gene_ID_2 %in% finalgenelist)),select=1:3)
+
