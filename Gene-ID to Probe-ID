@@ -1,22 +1,40 @@
 ##Mapping gene_ID to probe IDs
+#get the gene list from expression data
 expression<-read.table("gene_tissue_expression_significance.txt",sep="\t",header=T)
-
 gene_ID<-as.character(expression[,1])
+
 #convert gene ids to probe ids
 source("https://bioconductor.org/biocLite.R")
-biocLite("hgu133plus2.db")
-
-library(hgu133plus2.db)
-keytypes(db)
+biocLite("hgu133a.db")
+library(hgu133a.db)
+#keytypes(db)
 ids=gene_ID
 fromKey="ENTREZID"
 toKey="PROBEID"
-db=hgu133plus2.db
+db=hgu133a.db
 mappedIDs<-AnnotationDbi::select(db,keys=ids,keytype=fromKey,columns=c(fromKey,toKey))
-head(mappedIDs)
-sum(is.na(mappedIDs))
-probeID<-mappedIDs[,2]
-head(probeID)
-unknownprobes<-mappedIDs[is.na(probeID),]
-unknownprobes<-unknownprobes$ENTREZID
+
+#head(mappedIDs)
+#sum(is.na(mappedIDs))
+#probeID<-mappedIDs[,2]
+#head(probeID)
+#unknownprobes<-mappedIDs[is.na(probeID),]
+#unknownprobes<-unknownprobes$ENTREZID
 #this contains the IDs of all the unmapped (and only the unmapped) genes
+
+##To select only matched geneIDs:
+#select the first instance only of a mapped ID, remove "NA" values
+x=mappedIDs[match(ids,mappedIDs[,1]),]
+probeID<-x[,2]
+allgeneIDs<-x[,1]
+knownprobes<-x[!is.na(probeID),]
+#write.table(knownprobes,"mappedgenes02.txt",sep="\t",col.names=T)
+
+#collect all the gene identifiers from interactome, combine into one list, remove duplicates
+interactome<-read.table("interactome.txt",sep="\t",header=T)
+genelist<-c(interactome[,1],interactome[,2])
+genelist<-as.character(unique(genelist))
+
+#select geneIDs present in both the mapped gene list from the expression file and the unique interactome gene list
+finalgenelist<-genelist[match(allgeneIDs,genelist)]
+finalgenelist<-finalgenelist[!is.na(finalgenelist)]
