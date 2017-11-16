@@ -4,8 +4,8 @@ finalgenelist = read.table("/Users/capriarinaldi/Desktop/BMI_Final/finalgenelist
 
 exp_sig2 = exp_sig[(exp_sig$gene_id %in% finalgenelist$V1),]
 
-adipocyte = exp_sig2[,2] #choosing adipocyte row
-print(adipocyte[1:5]) #check that you selected correct row
+adipocyte = exp_sig2[,2] #choosing adipocyte column
+print(adipocyte[1:5]) #check that you selected correct column
 sig_adipocyte = which(adipocyte>1) #creating new array of only gene_id's with sig > 1
 length(sig_adipocyte) #how many genes are in this array?
 
