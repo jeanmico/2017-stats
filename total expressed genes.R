@@ -2,7 +2,7 @@
 exp_sig = read.table("/Users/capriarinaldi/Desktop/BMI_Final/Dataset2.txt", header=TRUE, sep='\t')
 finalgenelist = read.table("/Users/capriarinaldi/Desktop/BMI_Final/finalgenelist.txt")
 
-exp_sig2 = exp_sig[(exp_sig$gene_id %in% finalgenelist$V1),]
+exp_sig2 = exp_sig[(exp_sig$gene_id %in% finalgenelist$V1),] #making a new table that only includes the 10434 gene_id's we want
 
 adipocyte = exp_sig2[,2] #choosing adipocyte column
 print(adipocyte[1:5]) #check that you selected correct column
