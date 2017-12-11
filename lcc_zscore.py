@@ -79,6 +79,7 @@ for file in os.listdir(directory):  # this iterates through all files in the dir
 
 		#get the number of genes
 		n = int(tissue_lst[-2])
+		print(n)
 
 		#extract the lcc
 		lcc_lst = tissue_lines[2].strip().split()
@@ -87,8 +88,8 @@ for file in os.listdir(directory):  # this iterates through all files in the dir
 
 		# now calculate the number of genes
 		# select gene_count randomly
-		for i in range (1, 501):
-			genes_rand = random.sample(genes, n)
+		for i in range (1, 1001):
+			genes_rand = np.random.choice(genes, n, replace=True)
 
 			# construct the graph
 			G = nx.Graph()
@@ -96,9 +97,9 @@ for file in os.listdir(directory):  # this iterates through all files in the dir
 
 			for node in genes_rand:
 				if node in gene_dict:
-					for i in gene_dict[node]:
-						if i in genes_rand:
-							G.add_edge(node, i)
+					for j in gene_dict[node]:
+						if j in genes_rand:
+							G.add_edge(node, j)
 
 			# record the lcc (calculate using networkx)
 			if G.number_of_edges() == 0:
